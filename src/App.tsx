@@ -8,6 +8,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import CreateAccount from './components/CreateAccount';
 import LoadingScreen from './components/LoadingScreen';
+import { auth } from './firebase';
 
 const router = createBrowserRouter([
   {
@@ -49,7 +50,8 @@ const GloblaStyle = createGlobalStyle`
 function App() {
   const [isLoading, setLoading] = useState(true);
   const init = async () => {
-    setTimeout(() => setLoading(false), 1000);
+    await auth.authStateReady();
+    setLoading(false);
   };
 
   useEffect(() => {
