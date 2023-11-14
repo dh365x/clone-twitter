@@ -1,11 +1,13 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
+import { useEffect, useState } from 'react';
 import Layout from './components/Layout';
 import Profile from './components/Profile';
 import Home from './components/Home';
 import Login from './components/Login';
 import CreateAccount from './components/CreateAccount';
+import LoadingScreen from './components/LoadingScreen';
 
 const router = createBrowserRouter([
   {
@@ -45,10 +47,19 @@ const GloblaStyle = createGlobalStyle`
 `;
 
 function App() {
+  const [isLoading, setLoading] = useState(true);
+  const init = async () => {
+    setTimeout(() => setLoading(false), 1000);
+  };
+
+  useEffect(() => {
+    init();
+  }, []);
+
   return (
     <>
       <GloblaStyle />
-      <RouterProvider router={router} />
+      {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
     </>
   );
 }
