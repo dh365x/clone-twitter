@@ -1,5 +1,8 @@
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../firebase';
 
 const Wrapper = styled.div`
   display: flex;
@@ -48,6 +51,7 @@ export default function CreateAccount() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {
@@ -62,17 +66,28 @@ export default function CreateAccount() {
     }
   };
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isLoading || username === '' || email === '' || password === '') return;
     try {
+      setLoading(true);
       // 1. 계정 생성하기
+      const credentials = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log(credentials.user);
       // 2. 사용자 이름 설정하기
+      await updateProfile(credentials.user, {
+        displayName: username,
+      });
       // 3. home 경로로 돌아가기
+      navigate('/');
     } catch (e) {
       // 에러 발생 로직
     } finally {
       setLoading(false);
-      console.log(username, email, password);
     }
   };
 
