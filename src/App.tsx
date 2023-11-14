@@ -1,5 +1,5 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 import { useEffect, useState } from 'react';
 import Layout from './components/Layout';
@@ -47,8 +47,15 @@ const GloblaStyle = createGlobalStyle`
   }
 `;
 
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  height: 100%;
+`;
+
 function App() {
   const [isLoading, setLoading] = useState(true);
+
   const init = async () => {
     await auth.authStateReady();
     setLoading(false);
@@ -59,10 +66,10 @@ function App() {
   }, []);
 
   return (
-    <>
+    <Wrapper>
       <GloblaStyle />
       {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
-    </>
+    </Wrapper>
   );
 }
 
