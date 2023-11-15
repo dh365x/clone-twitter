@@ -2,14 +2,14 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 import { useEffect, useState } from 'react';
-import Layout from './components/Layout';
-import Profile from './components/Profile';
-import Home from './components/Home';
-import Login from './components/Login';
-import CreateAccount from './components/CreateAccount';
-import LoadingScreen from './components/LoadingScreen';
+import Layout from './components/layout';
+import Profile from './routes/profile';
+import Home from './routes/home';
+import Login from './routes/login';
+import CreateAccount from './routes/create-account';
+import LoadingScreen from './components/loading-screen';
 import { auth } from './firebase';
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './components/protected-route';
 
 const router = createBrowserRouter([
   {

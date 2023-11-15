@@ -1,14 +1,20 @@
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FirebaseError } from 'firebase/app';
 import { auth } from '../firebase';
-import { Error, Form, Input, Switcher, Title, Wrapper } from './AuthComponents';
-import GithubButton from './GithubButton';
+import {
+  Input,
+  Title,
+  Wrapper,
+  Switcher,
+  Error,
+  Form,
+} from '../components/auth-components';
+import GithubButton from '../components/github-button';
 
-export default function CreateAccount() {
+export default function Login() {
   const [isLoading, setLoading] = useState(false);
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -18,9 +24,7 @@ export default function CreateAccount() {
     const {
       target: { name, value },
     } = event;
-    if (name === 'username') {
-      setUsername(value);
-    } else if (name === 'email') {
+    if (name === 'email') {
       setEmail(value);
     } else if (name === 'password') {
       setPassword(value);
@@ -30,17 +34,10 @@ export default function CreateAccount() {
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
-    if (isLoading || username === '' || email === '' || password === '') return;
+    if (isLoading || email === '' || password === '') return;
     try {
       setLoading(true);
-      const credentials = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      await updateProfile(credentials.user, {
-        displayName: username,
-      });
+      await signInWithEmailAndPassword(auth, email, password);
       navigate('/');
     } catch (e) {
       if (e instanceof FirebaseError) {
@@ -53,16 +50,8 @@ export default function CreateAccount() {
 
   return (
     <Wrapper>
-      <Title>Join 𝕏</Title>
+      <Title>Log into 𝕏</Title>
       <Form onSubmit={onSubmit}>
-        <Input
-          value={username}
-          onChange={onChange}
-          type="text"
-          name="username"
-          placeholder="User Name"
-          required
-        />
         <Input
           value={email}
           onChange={onChange}
@@ -79,14 +68,12 @@ export default function CreateAccount() {
           placeholder="Password"
           required
         />
-        <Input
-          value={isLoading ? 'Loading...' : 'Create Account'}
-          type="submit"
-        />
+        <Input value={isLoading ? 'Loading...' : 'Login'} type="submit" />
       </Form>
       {error !== '' ? <Error>{error}</Error> : null}
       <Switcher>
-        Already have an account? <Link to="/login">Log in &rarr;</Link>
+        Don&apos;t you have an account?{' '}
+        <Link to="/create-account">Create one &rarr;</Link>
       </Switcher>
       <GithubButton />
     </Wrapper>
