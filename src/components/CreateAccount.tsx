@@ -1,7 +1,7 @@
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FirebaseError } from 'firebase/app';
 import { auth } from '../firebase';
 
@@ -47,6 +47,13 @@ const Error = styled.span`
   color: tomato;
 `;
 
+const Switcher = styled.span`
+  margin-top: 20px;
+  a {
+    color: #1d96f0;
+  }
+`;
+
 export default function CreateAccount() {
   const [isLoading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
@@ -84,7 +91,6 @@ export default function CreateAccount() {
       });
       navigate('/');
     } catch (e) {
-      // 에러 발생 로직(에러 정보를 e객체를 통해 확인 가능)
       if (e instanceof FirebaseError) {
         setError(e.message);
       }
@@ -95,7 +101,7 @@ export default function CreateAccount() {
 
   return (
     <Wrapper>
-      <Title>Log into X</Title>
+      <Title>Join 𝕏</Title>
       <Form onSubmit={onSubmit}>
         <Input
           value={username}
@@ -127,6 +133,9 @@ export default function CreateAccount() {
         />
       </Form>
       {error !== '' ? <Error>{error}</Error> : null}
+      <Switcher>
+        Already have an account? <Link to="/login">Log in &rarr;</Link>
+      </Switcher>
     </Wrapper>
   );
 }
