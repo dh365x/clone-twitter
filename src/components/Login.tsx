@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FirebaseError } from 'firebase/app';
 import { auth } from '../firebase';
 import { Input, Title, Wrapper, Switcher, Error, Form } from './AuthComponents';
+import GithubButton from './GithubButton';
 
 export default function Login() {
   const [isLoading, setLoading] = useState(false);
@@ -67,6 +68,7 @@ export default function Login() {
         Don&apos;t you have an account?{' '}
         <Link to="/create-account">Create one &rarr;</Link>
       </Switcher>
+      <GithubButton />
     </Wrapper>
   );
 }
