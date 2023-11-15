@@ -2,6 +2,7 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { FirebaseError } from 'firebase/app';
 import { auth } from '../firebase';
 
 const Wrapper = styled.div`
@@ -23,6 +24,7 @@ const Form = styled.form`
   gap: 10px;
   width: 100%;
   margin-top: 50px;
+  margin-bottom: 15px;
 `;
 
 const Input = styled.input`
@@ -40,7 +42,7 @@ const Input = styled.input`
 `;
 
 const Error = styled.span`
-  margin-top: 15px;
+  text-align: center;
   font-weight: 600;
   color: tomato;
 `;
@@ -68,24 +70,24 @@ export default function CreateAccount() {
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setError('');
     if (isLoading || username === '' || email === '' || password === '') return;
     try {
       setLoading(true);
-      // 1. 계정 생성하기
       const credentials = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-      console.log(credentials.user);
-      // 2. 사용자 이름 설정하기
       await updateProfile(credentials.user, {
         displayName: username,
       });
-      // 3. home 경로로 돌아가기
       navigate('/');
     } catch (e) {
-      // 에러 발생 로직
+      // 에러 발생 로직(에러 정보를 e객체를 통해 확인 가능)
+      if (e instanceof FirebaseError) {
+        setError(e.message);
+      }
     } finally {
       setLoading(false);
     }
