@@ -12,7 +12,10 @@ module.exports = {
   ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: './tsconfig.json',
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.node.json'],
+    tsconfigRootDir: __dirname,
   },
   plugins: ['react-refresh'],
   rules: {
@@ -21,7 +24,6 @@ module.exports = {
       { allowConstantExport: true },
     ],
     'react/react-in-jsx-scope': 'off',
-    'import/no-extraneous-dependencies': 'off',
     'no-alert': 'off',
     'react/jsx-props-no-spreading': 'off',
     'import/no-cycle': 'off',

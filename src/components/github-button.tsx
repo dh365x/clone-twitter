@@ -31,7 +31,7 @@ export default function GithubButton() {
       await signInWithPopup(auth, provider);
       navigate('/');
     } catch (error) {
-      console.log(error);
+      window.console.log(error);
     }
   };
 
