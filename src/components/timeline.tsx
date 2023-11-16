@@ -2,6 +2,7 @@ import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { db } from '../firebase';
+import Tweet from './tweet';
 
 const Wrapper = styled.div``;
 
@@ -34,5 +35,11 @@ export default function Timeline() {
     fetchTweets();
   }, []);
 
-  return <Wrapper>{JSON.stringify(tweets)}</Wrapper>;
+  return (
+    <Wrapper>
+      {tweets.map((tweet) => (
+        <Tweet key={tweet.id} {...tweet} />
+      ))}
+    </Wrapper>
+  );
 }
