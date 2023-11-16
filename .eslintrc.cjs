@@ -25,5 +25,7 @@ module.exports = {
     'no-alert': 'off',
     'react/jsx-props-no-spreading': 'off',
     'import/no-cycle': 'off',
+    'no-unused-expressions': 'off',
+    '@typescript-eslint/no-unused-expressions': 'off',
   },
 };
