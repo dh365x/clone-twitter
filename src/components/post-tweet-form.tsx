@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 
 const Form = styled.form`
@@ -66,12 +67,43 @@ const SubmitButton = styled.input`
 `;
 
 export default function PostTweetForm() {
+  const [isLoading, setLoading] = useState(false);
+  const [tweet, setTweet] = useState('');
+  const [file, setFile] = useState<File | null>(null);
+
+  const onChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setTweet(event.target.value);
+  };
+
+  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = event.target;
+    if (files && files.length === 1) {
+      setFile(files[0]);
+    }
+  };
+
   return (
     <Form>
-      <TextArea rows={5} maxLength={180} placeholder="What is happening?!" />
-      <AttachFileButton>Add photo</AttachFileButton>
-      <AttachFileInput />
-      <SubmitButton type="submit" value="Post Tweet" />
+      <TextArea
+        value={tweet}
+        onChange={onChange}
+        rows={5}
+        maxLength={180}
+        placeholder="What is happening?!"
+      />
+      <AttachFileButton htmlFor="file">
+        {file ? 'Photo added ✅' : 'Add photo'}
+      </AttachFileButton>
+      <AttachFileInput
+        onChange={onFileChange}
+        type="file"
+        id="file"
+        accept="image/*"
+      />
+      <SubmitButton
+        value={isLoading ? 'Posting...' : 'Post Tweet'}
+        type="submit"
+      />
     </Form>
   );
 }
