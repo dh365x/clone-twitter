@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { auth } from '../firebase';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { updateProfile } from 'firebase/auth';
+import { auth, storage } from '../firebase';
 
 const Wrapper = styled.div`
   display: flex;
@@ -40,6 +42,21 @@ export default function Profile() {
   const user = auth.currentUser;
   const [avatar, setAvatar] = useState(user?.photoURL);
 
+  const onAvatarChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = event.target;
+    if (!user) return;
+    if (files && files.length === 1) {
+      const file = files[0];
+      const locationRef = ref(storage, `avatars/${user?.uid}`);
+      const result = await uploadBytes(locationRef, file);
+      const avatarUrl = await getDownloadURL(result.ref);
+      setAvatar(avatarUrl);
+      await updateProfile(user, {
+        photoURL: avatarUrl,
+      });
+    }
+  };
+
   return (
     <Wrapper>
       <AvatarUpload htmlFor="avatar">
@@ -56,7 +73,12 @@ export default function Profile() {
           </svg>
         )}
       </AvatarUpload>
-      <AvatarInput id="avatar" type="file" accept="image/*" />
+      <AvatarInput
+        onChange={onAvatarChange}
+        id="avatar"
+        type="file"
+        accept="image/*"
+      />
       <Name>{user?.displayName ? user.displayName : 'Anonymous'}</Name>
     </Wrapper>
   );
